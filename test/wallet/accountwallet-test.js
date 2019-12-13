@@ -399,7 +399,7 @@ async function TestGetAllPrivacyTokenBalance() {
   }
 }
 
-TestGetAllPrivacyTokenBalance();
+// TestGetAllPrivacyTokenBalance();
 
 
 /************************* DEX **************************/
