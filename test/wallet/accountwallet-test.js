@@ -130,50 +130,7 @@ async function TestStakerStatus() {
 
 // TestStakerStatus();
 
-async function TestCreateAndSendNativeToken() {
-  Wallet.RpcClient = rpcClient;
-  await sleep(10000);
 
-  // sender key (private key)
-  let senderPrivateKeyStr = "112t8rnjeorQyyy36Vz5cqtfQNoXuM7M2H92eEvLWimiAtnQCSZiP2HXpMW7mECSRXeRrP8yPwxKGuziBvGVfmxhQJSt2KqHAPZvYmM1ZKwR";
-  let senderKeyWallet = keyWallet.base58CheckDeserialize(senderPrivateKeyStr);
-  senderKeyWallet.KeySet.importFromPrivateKey(senderKeyWallet.KeySet.PrivateKey);
-
-  let accountSender = new AccountWallet();
-  accountSender.key = senderKeyWallet;
-
-  // receiver key (payment address)
-  let receiverPaymentAddrStr = "12S5pBBRDf1GqfRHouvCV86sWaHzNfvakAWpVMvNnWu2k299xWCgQzLLc9wqPYUHfMYGDprPvQ794dbi6UU1hfRN4tPiU61txWWenhC";
-  // let receiverKeyWallet = keyWallet.base58CheckDeserialize(receiverPaymentAddrStr);
-  // let receiverPaymentAddr = receiverKeyWallet.KeySet.PaymentAddress;
-
-  // get balance
-
-  let balance = await accountSender.getBalance();
-  console.log("AAA balance: ", balance);
-
-  let fee = 5;
-  let isPrivacy = true;
-  let info = "";
-  let amountTransfer = 1 * 1e9; // in nano PRV
-
-  let paymentInfosParam = [];
-  paymentInfosParam[0] = {
-    "paymentAddressStr": receiverPaymentAddrStr,
-    "amount": amountTransfer,
-    // "message": "A mouse is so cute A mouse is so cute A mouse is so cute A mouse is so cute A mouse is so cute A mouse is so cute A mouse is so cute"
-  };
-
-  // create and send PRV
-  try {
-    await accountSender.createAndSendNativeToken(paymentInfosParam, fee, isPrivacy, info, false);
-  } catch (e) {
-    console.log("Error when send PRV: ", e);
-  }
-  console.log("Send tx 1 done");
-}
-
-// TestCreateAndSendNativeToken();
 
 async function TestCreateAndSendPrivacyTokenInit() {
   Wallet.RpcClient = rpcClient;
