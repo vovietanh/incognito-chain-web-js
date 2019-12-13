@@ -1,5 +1,5 @@
-import { Wallet } from "../lib/wallet/wallet"
-import { RpcClient } from "../lib/rpcclient/rpcclient"
+import { Wallet } from "../../lib/wallet/wallet"
+import { RpcClient } from "../../lib/rpcclient/rpcclient"
 
 async function testIdenticon() {
     Wallet.RpcClient = new RpcClient("https://test-node.incognito.org")

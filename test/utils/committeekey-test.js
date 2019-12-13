@@ -1,8 +1,8 @@
-import { generateCommitteeKeyFromHashPrivateKey, generateBLSPubKeyB58CheckEncodeFromSeed} from "../lib/committeekey";
-import {KeyWallet} from "../lib/wallet/hdwallet";
-import {checkDecode, checkEncode} from "../lib/base58";
-import { hashSha3BytesToBytes } from "../lib/privacy/utils";
-import { convertHashToStr } from "../lib/common";
+import { generateCommitteeKeyFromHashPrivateKey, generateBLSPubKeyB58CheckEncodeFromSeed} from "../../lib/committeekey";
+import {KeyWallet} from "../../lib/wallet/hdwallet";
+import {checkDecode, checkEncode} from "../../lib/base58";
+import { hashSha3BytesToBytes } from "../../lib/privacy/utils";
+import { convertHashToStr } from "../../lib/common";
 
 
 async function sleep(sleepTime) {
@@ -58,4 +58,4 @@ async function TestBLSPubKey(){
     console.log("blsPubKey: ", blsPubKey);
 }
 
-TestBLSPubKey()
+// TestBLSPubKey()

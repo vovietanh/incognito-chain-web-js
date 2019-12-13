@@ -1,7 +1,7 @@
-import * as key from "../lib/key"
-import * as base58 from "../lib/base58"
+import * as key from "../../lib/key"
+import * as base58 from "../../lib/base58"
 import CryptoJS from "crypto-js";
-import { stringToBytes } from "../lib/privacy/utils";
+import { stringToBytes } from "../../lib/privacy/utils";
 
 async function sleep(sleepTime) {
   return new Promise(resolve => setTimeout(resolve, sleepTime));
@@ -46,4 +46,4 @@ function TestStringBytes(){
 
   console.log("Bytes: ", bytes, bytes.length);
 }
-TestStringBytes()
+// TestStringBytes()
