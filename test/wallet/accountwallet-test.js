@@ -41,7 +41,7 @@ async function TestGetRewardAmount() {
   console.log("REsponse getRewardAmount: ", response0);
 }
 
-TestGetRewardAmount();
+// TestGetRewardAmount();
 
 async function TestCreateAndSendRewardAmountTx() {
   Wallet.RpcClient = rpcClient;

@@ -1,6 +1,3 @@
-require('@babel/register');
-require("@babel/polyfill");
-require("./loadwasm");
 import { KeyWallet as keyWallet } from "../../lib/wallet/hdwallet";
 import { AccountWallet, Wallet } from "../../lib/wallet/wallet";
 import { RpcClient } from "../../lib/rpcclient/rpcclient";
@@ -24,7 +21,7 @@ async function TestCreateAndSendNativeToken() {
     await sleep(5000);
 
     // sender key (private key)
-    let senderPrivateKeyStr = "112t8rnjeorQyyy36Vz5cqtfQNoXuM7M2H92eEvLWimiAtnQCSZiP2HXpMW7mECSRXeRrP8yPwxKGuziBvGVfmxhQJSt2KqHAPZvYmM1ZKwR";
+    let senderPrivateKeyStr = "112t8rnaqXpcge9BETLXdBnSVMq37pVzSr1i3tcvTJ3jQMs5NCWgv5VmMwRwtm9zzELKzz6WgtoPMR9PBgY95Cf15QMGVTFvpPii3TkW2tUB";
     let senderKeyWallet = keyWallet.base58CheckDeserialize(senderPrivateKeyStr);
     senderKeyWallet.KeySet.importFromPrivateKey(senderKeyWallet.KeySet.PrivateKey);
 
@@ -32,7 +29,7 @@ async function TestCreateAndSendNativeToken() {
     accountSender.key = senderKeyWallet;
 
     // receiver key (payment address)
-    let receiverPaymentAddrStr = "12S5pBBRDf1GqfRHouvCV86sWaHzNfvakAWpVMvNnWu2k299xWCgQzLLc9wqPYUHfMYGDprPvQ794dbi6UU1hfRN4tPiU61txWWenhC";
+    let receiverPaymentAddrStr = "12RuEdPjq4yxivzm8xPxRVHmkL74t4eAdUKPdKKhMEnpxPH3k8GEyULbwq4hjwHWmHQr7MmGBJsMpdCHsYAqNE18jipWQwciBf9yqvQ";
     // let receiverKeyWallet = keyWallet.base58CheckDeserialize(receiverPaymentAddrStr);
     // let receiverPaymentAddr = receiverKeyWallet.KeySet.PaymentAddress;
 
@@ -64,8 +61,8 @@ async function TestCreateAndSendNativeToken() {
     await sleep(3*60*1000); // waiting 3 mins
 
     let balanceSenderAfter = await accountSender.getBalance();
-    if (balanceSenderAfter === balanceSender - amountTransfer){
-        
+    if (balanceSenderAfter === balanceSender - amountTransfer - fee){
+        console.log(" -------- balanceSenderAfter: ", balanceSenderAfter);
     }
 
 }

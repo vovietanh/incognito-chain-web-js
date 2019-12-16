@@ -8599,7 +8599,10 @@ function () {
 
     this.spentCoinCached = {}; // list of serial number of coins in tx in mempool
 
-    this.spendingCoins = [];
+    this.spendingCoins = []; // list all output coins to current block height
+
+    this.allOutputCoins = [];
+    this.latestBlockHeight = 0;
   }
 
   _createClass(AccountWallet, [{
@@ -9227,6 +9230,8 @@ function () {
       var _getOutputCoins = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee4() {
+        var _this$allOutputCoins;
+
         var tokenID,
             rpcClient,
             paymentAddrSerialize,
@@ -9243,33 +9248,41 @@ function () {
                 rpcClient = _args4.length > 1 ? _args4[1] : undefined;
                 paymentAddrSerialize = this.key.base58CheckSerialize(_constants__WEBPACK_IMPORTED_MODULE_3__["PaymentAddressType"]);
                 readOnlyKeySerialize = this.key.base58CheckSerialize(_constants__WEBPACK_IMPORTED_MODULE_3__["ReadonlyKeyType"]);
-                fromBlock = 0; // get all output coins of spendingKey
+                fromBlock = this.latestBlockHeight + 1;
+                console.log("-------------------- getOutputCoins fromBlock: ", fromBlock);
+                console.log("-------------------- getOutputCoins this.allOutputCoins: ", this.allOutputCoins); // get all output coins of spendingKey
 
-                _context4.prev = 5;
-                _context4.next = 8;
+                _context4.prev = 7;
+                _context4.next = 10;
                 return rpcClient.getOutputCoinV2(paymentAddrSerialize, readOnlyKeySerialize, fromBlock, 0, tokenID);
 
-              case 8:
+              case 10:
                 response = _context4.sent;
-                _context4.next = 15;
+                _context4.next = 17;
                 break;
 
-              case 11:
-                _context4.prev = 11;
-                _context4.t0 = _context4["catch"](5);
+              case 13:
+                _context4.prev = 13;
+                _context4.t0 = _context4["catch"](7);
                 console.log("getUnspentToken Error when get output coins: ", _context4.t0);
                 throw new _errorhandler__WEBPACK_IMPORTED_MODULE_14__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_14__["ErrorObject"].GetOutputCoinsErr, _context4.t0.message || "Can not get output coins when get unspent token");
 
-              case 15:
-                allOutputCoinStrs = response.outCoins;
-                return _context4.abrupt("return", allOutputCoinStrs);
-
               case 17:
+                allOutputCoinStrs = response.outCoins;
+
+                (_this$allOutputCoins = this.allOutputCoins).push.apply(_this$allOutputCoins, _toConsumableArray(allOutputCoinStrs));
+
+                this.latestBlockHeight = response.blockHeight;
+                console.log("-------------------- getOutputCoins toBlock: ", this.latestBlockHeight);
+                console.log("-------------------- getOutputCoins this.allOutputCoins after: ", this.allOutputCoins);
+                return _context4.abrupt("return", this.allOutputCoins);
+
+              case 23:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[5, 11]]);
+        }, _callee4, this, [[7, 13]]);
       }));
 
       function getOutputCoins() {
