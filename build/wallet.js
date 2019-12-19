@@ -4636,20 +4636,87 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants */ "./lib/constants.js");
 /* harmony import */ var _errorhandler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../errorhandler */ "./lib/errorhandler.js");
 /* harmony import */ var _wallet_constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../wallet/constants */ "./lib/wallet/constants.js");
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
 
 
 
 
+
+
+var parseResponse =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee(rpcService, method) {
+    var params,
+        data,
+        response,
+        _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            params = _args.length > 2 && _args[2] !== undefined ? _args[2] : [];
+            data = {
+              "jsonrpc": "1.0",
+              "method": method,
+              "params": params,
+              "id": 1
+            };
+            _context.prev = 2;
+            _context.next = 5;
+            return rpcService.postRequest(data);
+
+          case 5:
+            response = _context.sent;
+            _context.next = 11;
+            break;
+
+          case 8:
+            _context.prev = 8;
+            _context.t0 = _context["catch"](2);
+            throw _context.t0;
+
+          case 11:
+            if (!(response.status !== 200)) {
+              _context.next = 15;
+              break;
+            }
+
+            throw new Error("Can't request API " + data.method);
+
+          case 15:
+            if (!response.data.Error) {
+              _context.next = 17;
+              break;
+            }
+
+            throw response.data.Error;
+
+          case 17:
+            return _context.abrupt("return", response.data.Result);
+
+          case 18:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[2, 8]]);
+  }));
+
+  return function parseResponse(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 var RpcClient = function RpcClient(url, user, password) {
   var _this = this;
@@ -4659,21 +4726,21 @@ var RpcClient = function RpcClient(url, user, password) {
   _defineProperty(this, "getOutputCoin",
   /*#__PURE__*/
   function () {
-    var _ref = _asyncToGenerator(
+    var _ref2 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee(paymentAdrr, viewingKey) {
+    regeneratorRuntime.mark(function _callee2(paymentAdrr, viewingKey) {
       var tokenID,
           data,
           response,
           outCoinsMap,
           outCoins,
           key,
-          _args = arguments;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
+          _args2 = arguments;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              tokenID = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
+              tokenID = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : null;
               data = {
                 "jsonrpc": "1.0",
                 "method": "listoutputcoins",
@@ -4686,104 +4753,6 @@ var RpcClient = function RpcClient(url, user, password) {
 
               if (tokenID != null) {
                 data["params"][3] = tokenID;
-              }
-
-              _context.prev = 3;
-              _context.next = 6;
-              return _this.rpcHttpService.postRequest(data);
-
-            case 6:
-              response = _context.sent;
-              _context.next = 12;
-              break;
-
-            case 9:
-              _context.prev = 9;
-              _context.t0 = _context["catch"](3);
-              throw _context.t0;
-
-            case 12:
-              if (!(response.status !== 200)) {
-                _context.next = 16;
-                break;
-              }
-
-              throw new Error("Can't request API get all output coins");
-
-            case 16:
-              if (!response.data.Error) {
-                _context.next = 18;
-                break;
-              }
-
-              throw response.data.Error;
-
-            case 18:
-              outCoinsMap = response.data.Result.Outputs;
-              _context.t1 = regeneratorRuntime.keys(outCoinsMap);
-
-            case 20:
-              if ((_context.t2 = _context.t1()).done) {
-                _context.next = 27;
-                break;
-              }
-
-              key = _context.t2.value;
-
-              if (!(key == paymentAdrr || viewingKey !== "" && key == viewingKey)) {
-                _context.next = 25;
-                break;
-              }
-
-              outCoins = outCoinsMap[key];
-              return _context.abrupt("break", 27);
-
-            case 25:
-              _context.next = 20;
-              break;
-
-            case 27:
-              return _context.abrupt("return", {
-                outCoins: outCoins
-              });
-
-            case 28:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, null, [[3, 9]]);
-    }));
-
-    return function (_x, _x2) {
-      return _ref.apply(this, arguments);
-    };
-  }());
-
-  _defineProperty(this, "hasSerialNumber",
-  /*#__PURE__*/
-  function () {
-    var _ref2 = _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee2(paymentAddr, serialNumberStrs) {
-      var tokenID,
-          data,
-          response,
-          _args2 = arguments;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              tokenID = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : null;
-              data = {
-                "jsonrpc": "1.0",
-                "method": "hasserialnumbers",
-                "params": [paymentAddr, serialNumberStrs],
-                "id": 1
-              };
-
-              if (tokenID != null) {
-                data["params"][2] = tokenID;
               }
 
               _context2.prev = 3;
@@ -4806,7 +4775,7 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw new Error("Can't request API check has serial number");
+              throw new Error("Can't request API get all output coins");
 
             case 16:
               if (!response.data.Error) {
@@ -4817,11 +4786,35 @@ var RpcClient = function RpcClient(url, user, password) {
               throw response.data.Error;
 
             case 18:
+              outCoinsMap = response.data.Result.Outputs;
+              _context2.t1 = regeneratorRuntime.keys(outCoinsMap);
+
+            case 20:
+              if ((_context2.t2 = _context2.t1()).done) {
+                _context2.next = 27;
+                break;
+              }
+
+              key = _context2.t2.value;
+
+              if (!(key == paymentAdrr || viewingKey !== "" && key == viewingKey)) {
+                _context2.next = 25;
+                break;
+              }
+
+              outCoins = outCoinsMap[key];
+              return _context2.abrupt("break", 27);
+
+            case 25:
+              _context2.next = 20;
+              break;
+
+            case 27:
               return _context2.abrupt("return", {
-                existed: response.data.Result
+                outCoins: outCoins
               });
 
-            case 19:
+            case 28:
             case "end":
               return _context2.stop();
           }
@@ -4834,12 +4827,12 @@ var RpcClient = function RpcClient(url, user, password) {
     };
   }());
 
-  _defineProperty(this, "hasSNDerivator",
+  _defineProperty(this, "hasSerialNumber",
   /*#__PURE__*/
   function () {
     var _ref3 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee3(paymentAddr, snds) {
+    regeneratorRuntime.mark(function _callee3(paymentAddr, serialNumberStrs) {
       var tokenID,
           data,
           response,
@@ -4851,8 +4844,8 @@ var RpcClient = function RpcClient(url, user, password) {
               tokenID = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : null;
               data = {
                 "jsonrpc": "1.0",
-                "method": "hassnderivators",
-                "params": [paymentAddr, snds],
+                "method": "hasserialnumbers",
+                "params": [paymentAddr, serialNumberStrs],
                 "id": 1
               };
 
@@ -4880,7 +4873,7 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw new Error("Can't request API check has serial number derivator");
+              throw new Error("Can't request API check has serial number");
 
             case 16:
               if (!response.data.Error) {
@@ -4908,16 +4901,15 @@ var RpcClient = function RpcClient(url, user, password) {
     };
   }());
 
-  _defineProperty(this, "randomCommitmentsProcess",
+  _defineProperty(this, "hasSNDerivator",
   /*#__PURE__*/
   function () {
     var _ref4 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee4(paymentAddr, inputCoinStrs) {
+    regeneratorRuntime.mark(function _callee4(paymentAddr, snds) {
       var tokenID,
           data,
           response,
-          commitmentStrs,
           _args4 = arguments;
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
@@ -4926,8 +4918,8 @@ var RpcClient = function RpcClient(url, user, password) {
               tokenID = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : null;
               data = {
                 "jsonrpc": "1.0",
-                "method": "randomcommitments",
-                "params": [paymentAddr, inputCoinStrs],
+                "method": "hassnderivators",
+                "params": [paymentAddr, snds],
                 "id": 1
               };
 
@@ -4955,11 +4947,86 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw new Error("Can't request API random commitments");
+              throw new Error("Can't request API check has serial number derivator");
 
             case 16:
               if (!response.data.Error) {
                 _context4.next = 18;
+                break;
+              }
+
+              throw response.data.Error;
+
+            case 18:
+              return _context4.abrupt("return", {
+                existed: response.data.Result
+              });
+
+            case 19:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[3, 9]]);
+    }));
+
+    return function (_x7, _x8) {
+      return _ref4.apply(this, arguments);
+    };
+  }());
+
+  _defineProperty(this, "randomCommitmentsProcess",
+  /*#__PURE__*/
+  function () {
+    var _ref5 = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee5(paymentAddr, inputCoinStrs) {
+      var tokenID,
+          data,
+          response,
+          commitmentStrs,
+          _args5 = arguments;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              tokenID = _args5.length > 2 && _args5[2] !== undefined ? _args5[2] : null;
+              data = {
+                "jsonrpc": "1.0",
+                "method": "randomcommitments",
+                "params": [paymentAddr, inputCoinStrs],
+                "id": 1
+              };
+
+              if (tokenID != null) {
+                data["params"][2] = tokenID;
+              }
+
+              _context5.prev = 3;
+              _context5.next = 6;
+              return _this.rpcHttpService.postRequest(data);
+
+            case 6:
+              response = _context5.sent;
+              _context5.next = 12;
+              break;
+
+            case 9:
+              _context5.prev = 9;
+              _context5.t0 = _context5["catch"](3);
+              throw _context5.t0;
+
+            case 12:
+              if (!(response.status !== 200)) {
+                _context5.next = 16;
+                break;
+              }
+
+              throw new Error("Can't request API random commitments");
+
+            case 16:
+              if (!response.data.Error) {
+                _context5.next = 18;
                 break;
               }
 
@@ -4976,7 +5043,7 @@ var RpcClient = function RpcClient(url, user, password) {
               //   commitments[i] = P256.decompress(res.bytesDecoded);
               // }
 
-              return _context4.abrupt("return", {
+              return _context5.abrupt("return", {
                 commitmentIndices: response.data.Result.CommitmentIndices,
                 commitmentStrs: commitmentStrs,
                 myCommitmentIndices: response.data.Result.MyCommitmentIndexs
@@ -4984,27 +5051,27 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 20:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4, null, [[3, 9]]);
+      }, _callee5, null, [[3, 9]]);
     }));
 
-    return function (_x7, _x8) {
-      return _ref4.apply(this, arguments);
+    return function (_x9, _x10) {
+      return _ref5.apply(this, arguments);
     };
   }());
 
   _defineProperty(this, "sendRawTx",
   /*#__PURE__*/
   function () {
-    var _ref5 = _asyncToGenerator(
+    var _ref6 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee5(serializedTxJson) {
+    regeneratorRuntime.mark(function _callee6(serializedTxJson) {
       var data, response;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      return regeneratorRuntime.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
               data = {
                 "jsonrpc": "1.0",
@@ -5012,23 +5079,23 @@ var RpcClient = function RpcClient(url, user, password) {
                 "params": [serializedTxJson],
                 "id": 1
               };
-              _context5.prev = 1;
-              _context5.next = 4;
+              _context6.prev = 1;
+              _context6.next = 4;
               return _this.rpcHttpService.postRequest(data);
 
             case 4:
-              response = _context5.sent;
-              _context5.next = 10;
+              response = _context6.sent;
+              _context6.next = 10;
               break;
 
             case 7:
-              _context5.prev = 7;
-              _context5.t0 = _context5["catch"](1);
-              throw _context5.t0;
+              _context6.prev = 7;
+              _context6.t0 = _context6["catch"](1);
+              throw _context6.t0;
 
             case 10:
               if (!(response.status !== 200)) {
-                _context5.next = 14;
+                _context6.next = 14;
                 break;
               }
 
@@ -5036,7 +5103,7 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 14:
               if (!response.data.Error) {
-                _context5.next = 16;
+                _context6.next = 16;
                 break;
               }
 
@@ -5044,33 +5111,33 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 16:
               console.log("**** SENDING TX SUCCESS, TxID: ", response.data.Result.TxID);
-              return _context5.abrupt("return", {
+              return _context6.abrupt("return", {
                 txId: response.data.Result.TxID
               });
 
             case 18:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
         }
-      }, _callee5, null, [[1, 7]]);
+      }, _callee6, null, [[1, 7]]);
     }));
 
-    return function (_x9) {
-      return _ref5.apply(this, arguments);
+    return function (_x11) {
+      return _ref6.apply(this, arguments);
     };
   }());
 
   _defineProperty(this, "sendRawTxCustomToken",
   /*#__PURE__*/
   function () {
-    var _ref6 = _asyncToGenerator(
+    var _ref7 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee6(tx) {
+    regeneratorRuntime.mark(function _callee7(tx) {
       var txJson, txBytes, serializedTxJson, data, response;
-      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      return regeneratorRuntime.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               // hide private key for signing
               delete tx.sigPrivKey; // convert tx to json
@@ -5089,24 +5156,24 @@ var RpcClient = function RpcClient(url, user, password) {
                 "params": [serializedTxJson],
                 "id": 1
               };
-              _context6.prev = 8;
-              _context6.next = 11;
+              _context7.prev = 8;
+              _context7.next = 11;
               return _this.rpcHttpService.postRequest(data);
 
             case 11:
-              response = _context6.sent;
+              response = _context7.sent;
               console.log("response sendRawTxCustomToken", response);
-              _context6.next = 18;
+              _context7.next = 18;
               break;
 
             case 15:
-              _context6.prev = 15;
-              _context6.t0 = _context6["catch"](8);
-              throw _context6.t0;
+              _context7.prev = 15;
+              _context7.t0 = _context7["catch"](8);
+              throw _context7.t0;
 
             case 18:
               if (!(response.status !== 200)) {
-                _context6.next = 22;
+                _context7.next = 22;
                 break;
               }
 
@@ -5114,7 +5181,7 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 22:
               if (!response.data.Error) {
-                _context6.next = 24;
+                _context7.next = 24;
                 break;
               }
 
@@ -5122,33 +5189,33 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 24:
               console.log("**** SENDING TX SUCCESS****");
-              return _context6.abrupt("return", {
+              return _context7.abrupt("return", {
                 txId: response.data.Result.TxID
               });
 
             case 26:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
         }
-      }, _callee6, null, [[8, 15]]);
+      }, _callee7, null, [[8, 15]]);
     }));
 
-    return function (_x10) {
-      return _ref6.apply(this, arguments);
+    return function (_x12) {
+      return _ref7.apply(this, arguments);
     };
   }());
 
   _defineProperty(this, "sendRawTxCustomTokenPrivacy",
   /*#__PURE__*/
   function () {
-    var _ref7 = _asyncToGenerator(
+    var _ref8 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee7(serializedTxJson) {
+    regeneratorRuntime.mark(function _callee8(serializedTxJson) {
       var data, response;
-      return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      return regeneratorRuntime.wrap(function _callee8$(_context8) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context8.prev = _context8.next) {
             case 0:
               data = {
                 "jsonrpc": "1.0",
@@ -5156,23 +5223,23 @@ var RpcClient = function RpcClient(url, user, password) {
                 "params": [serializedTxJson],
                 "id": 1
               };
-              _context7.prev = 1;
-              _context7.next = 4;
+              _context8.prev = 1;
+              _context8.next = 4;
               return _this.rpcHttpService.postRequest(data);
 
             case 4:
-              response = _context7.sent;
-              _context7.next = 10;
+              response = _context8.sent;
+              _context8.next = 10;
               break;
 
             case 7:
-              _context7.prev = 7;
-              _context7.t0 = _context7["catch"](1);
-              throw _context7.t0;
+              _context8.prev = 7;
+              _context8.t0 = _context8["catch"](1);
+              throw _context8.t0;
 
             case 10:
               if (!(response.status !== 200)) {
-                _context7.next = 14;
+                _context8.next = 14;
                 break;
               }
 
@@ -5180,7 +5247,7 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 14:
               if (!response.data.Error) {
-                _context7.next = 16;
+                _context8.next = 16;
                 break;
               }
 
@@ -5188,20 +5255,20 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 16:
               console.log("**** SENDING TX SUCCESS, TxID: ", response.data.Result.TxID);
-              return _context7.abrupt("return", {
+              return _context8.abrupt("return", {
                 txId: response.data.Result.TxID
               });
 
             case 18:
             case "end":
-              return _context7.stop();
+              return _context8.stop();
           }
         }
-      }, _callee7, null, [[1, 7]]);
+      }, _callee8, null, [[1, 7]]);
     }));
 
-    return function (_x11) {
-      return _ref7.apply(this, arguments);
+    return function (_x13) {
+      return _ref8.apply(this, arguments);
     };
   }());
 
@@ -5209,74 +5276,15 @@ var RpcClient = function RpcClient(url, user, password) {
   /*#__PURE__*/
   _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee8() {
-    var data, response;
-    return regeneratorRuntime.wrap(function _callee8$(_context8) {
-      while (1) {
-        switch (_context8.prev = _context8.next) {
-          case 0:
-            data = {
-              "jsonrpc": "1.0",
-              "method": "listcustomtoken",
-              "params": [],
-              "id": 1
-            };
-            _context8.prev = 1;
-            _context8.next = 4;
-            return _this.rpcHttpService.postRequest(data);
-
-          case 4:
-            response = _context8.sent;
-            _context8.next = 10;
-            break;
-
-          case 7:
-            _context8.prev = 7;
-            _context8.t0 = _context8["catch"](1);
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListCustomTokenErr, "Can't request API get custom token list");
-
-          case 10:
-            if (!(response.status !== 200)) {
-              _context8.next = 14;
-              break;
-            }
-
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListCustomTokenErr, "Can't request API get custom token list");
-
-          case 14:
-            if (!response.data.Error) {
-              _context8.next = 16;
-              break;
-            }
-
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListCustomTokenErr, response.data.Error.Message);
-
-          case 16:
-            return _context8.abrupt("return", {
-              listCustomToken: response.data.Result.ListCustomToken
-            });
-
-          case 17:
-          case "end":
-            return _context8.stop();
-        }
-      }
-    }, _callee8, null, [[1, 7]]);
-  })));
-
-  _defineProperty(this, "listPrivacyCustomTokens",
-  /*#__PURE__*/
-  _asyncToGenerator(
-  /*#__PURE__*/
   regeneratorRuntime.mark(function _callee9() {
-    var data, response, pTokens, i, infoDecode, infoDecodeStr;
+    var data, response;
     return regeneratorRuntime.wrap(function _callee9$(_context9) {
       while (1) {
         switch (_context9.prev = _context9.next) {
           case 0:
             data = {
               "jsonrpc": "1.0",
-              "method": "listprivacycustomtoken",
+              "method": "listcustomtoken",
               "params": [],
               "id": 1
             };
@@ -5292,7 +5300,7 @@ var RpcClient = function RpcClient(url, user, password) {
           case 7:
             _context9.prev = 7;
             _context9.t0 = _context9["catch"](1);
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListPrivacyTokenErr, "Can't request API get privacy token list");
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListCustomTokenErr, "Can't request API get custom token list");
 
           case 10:
             if (!(response.status !== 200)) {
@@ -5300,11 +5308,70 @@ var RpcClient = function RpcClient(url, user, password) {
               break;
             }
 
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListPrivacyTokenErr, "Can't request API get privacy token list");
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListCustomTokenErr, "Can't request API get custom token list");
 
           case 14:
             if (!response.data.Error) {
               _context9.next = 16;
+              break;
+            }
+
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListCustomTokenErr, response.data.Error.Message);
+
+          case 16:
+            return _context9.abrupt("return", {
+              listCustomToken: response.data.Result.ListCustomToken
+            });
+
+          case 17:
+          case "end":
+            return _context9.stop();
+        }
+      }
+    }, _callee9, null, [[1, 7]]);
+  })));
+
+  _defineProperty(this, "listPrivacyCustomTokens",
+  /*#__PURE__*/
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee10() {
+    var data, response, pTokens, i, infoDecode, infoDecodeStr;
+    return regeneratorRuntime.wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            data = {
+              "jsonrpc": "1.0",
+              "method": "listprivacycustomtoken",
+              "params": [],
+              "id": 1
+            };
+            _context10.prev = 1;
+            _context10.next = 4;
+            return _this.rpcHttpService.postRequest(data);
+
+          case 4:
+            response = _context10.sent;
+            _context10.next = 10;
+            break;
+
+          case 7:
+            _context10.prev = 7;
+            _context10.t0 = _context10["catch"](1);
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListPrivacyTokenErr, "Can't request API get privacy token list");
+
+          case 10:
+            if (!(response.status !== 200)) {
+              _context10.next = 14;
+              break;
+            }
+
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetListPrivacyTokenErr, "Can't request API get privacy token list");
+
+          case 14:
+            if (!response.data.Error) {
+              _context10.next = 16;
               break;
             }
 
@@ -5321,28 +5388,28 @@ var RpcClient = function RpcClient(url, user, password) {
               }
             }
 
-            return _context9.abrupt("return", {
+            return _context10.abrupt("return", {
               listPrivacyToken: pTokens
             });
 
           case 19:
           case "end":
-            return _context9.stop();
+            return _context10.stop();
         }
       }
-    }, _callee9, null, [[1, 7]]);
+    }, _callee10, null, [[1, 7]]);
   })));
 
   _defineProperty(this, "getUnspentCustomToken",
   /*#__PURE__*/
   function () {
-    var _ref10 = _asyncToGenerator(
+    var _ref11 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee10(paymentAddrSerialize, tokenIDStr) {
+    regeneratorRuntime.mark(function _callee11(paymentAddrSerialize, tokenIDStr) {
       var data, response;
-      return regeneratorRuntime.wrap(function _callee10$(_context10) {
+      return regeneratorRuntime.wrap(function _callee11$(_context11) {
         while (1) {
-          switch (_context10.prev = _context10.next) {
+          switch (_context11.prev = _context11.next) {
             case 0:
               data = {
                 "jsonrpc": "1.0",
@@ -5350,81 +5417,81 @@ var RpcClient = function RpcClient(url, user, password) {
                 "params": [paymentAddrSerialize, tokenIDStr],
                 "id": 1
               };
-              _context10.prev = 1;
-              _context10.next = 4;
+              _context11.prev = 1;
+              _context11.next = 4;
               return _this.rpcHttpService.postRequest(data);
 
             case 4:
-              response = _context10.sent;
-              _context10.next = 10;
+              response = _context11.sent;
+              _context11.next = 10;
               break;
 
             case 7:
-              _context10.prev = 7;
-              _context10.t0 = _context10["catch"](1);
-              throw _context10.t0;
+              _context11.prev = 7;
+              _context11.t0 = _context11["catch"](1);
+              throw _context11.t0;
 
             case 10:
               if (!response.data.Result) {
-                _context10.next = 12;
+                _context11.next = 12;
                 break;
               }
 
-              return _context10.abrupt("return", {
+              return _context11.abrupt("return", {
                 listUnspentCustomToken: response.data.Result
               });
 
             case 12:
             case "end":
-              return _context10.stop();
+              return _context11.stop();
           }
         }
-      }, _callee10, null, [[1, 7]]);
+      }, _callee11, null, [[1, 7]]);
     }));
 
-    return function (_x12, _x13) {
-      return _ref10.apply(this, arguments);
+    return function (_x14, _x15) {
+      return _ref11.apply(this, arguments);
     };
   }());
 
   _defineProperty(this, "getEstimateFeePerKB",
   /*#__PURE__*/
   function () {
-    var _ref11 = _asyncToGenerator(
+    var _ref12 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee11(paymentAddrSerialize) {
+    regeneratorRuntime.mark(function _callee12(paymentAddrSerialize) {
       var tokenIDStr,
           data,
           response,
-          _args11 = arguments;
-      return regeneratorRuntime.wrap(function _callee11$(_context11) {
+          _args12 = arguments;
+      return regeneratorRuntime.wrap(function _callee12$(_context12) {
         while (1) {
-          switch (_context11.prev = _context11.next) {
+          switch (_context12.prev = _context12.next) {
             case 0:
-              tokenIDStr = _args11.length > 1 && _args11[1] !== undefined ? _args11[1] : null;
+              tokenIDStr = _args12.length > 1 && _args12[1] !== undefined ? _args12[1] : null;
               data = {
                 "jsonrpc": "1.0",
                 "method": "estimatefeewithestimator",
                 "params": [-1, paymentAddrSerialize, 8, tokenIDStr],
                 "id": 1
               };
-              _context11.prev = 2;
-              _context11.next = 5;
+              _context12.prev = 2;
+              _context12.next = 5;
               return _this.rpcHttpService.postRequest(data);
 
             case 5:
-              response = _context11.sent;
-              _context11.next = 11;
+              response = _context12.sent;
+              _context12.next = 11;
               break;
 
             case 8:
-              _context11.prev = 8;
-              _context11.t0 = _context11["catch"](2);
-              throw _context11.t0;
+              _context12.prev = 8;
+              _context12.t0 = _context12["catch"](2);
+              throw _context12.t0;
 
             case 11:
               if (!(response.status !== 200)) {
-                _context11.next = 15;
+                _context12.next = 15;
                 break;
               }
 
@@ -5432,115 +5499,44 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 15:
               if (!response.data.Error) {
-                _context11.next = 17;
+                _context12.next = 17;
                 break;
               }
 
               throw response.data.Error;
 
             case 17:
-              return _context11.abrupt("return", {
+              return _context12.abrupt("return", {
                 unitFee: parseInt(response.data.Result.EstimateFeeCoinPerKb)
               });
 
             case 18:
             case "end":
-              return _context11.stop();
+              return _context12.stop();
           }
         }
-      }, _callee11, null, [[2, 8]]);
+      }, _callee12, null, [[2, 8]]);
     }));
 
-    return function (_x14) {
-      return _ref11.apply(this, arguments);
+    return function (_x16) {
+      return _ref12.apply(this, arguments);
     };
   }());
 
   _defineProperty(this, "getTransactionByHash",
   /*#__PURE__*/
   function () {
-    var _ref12 = _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee12(txHashStr) {
-      var data, response;
-      return regeneratorRuntime.wrap(function _callee12$(_context12) {
-        while (1) {
-          switch (_context12.prev = _context12.next) {
-            case 0:
-              data = {
-                "method": "gettransactionbyhash",
-                "params": [txHashStr],
-                "id": 1
-              };
-              _context12.prev = 1;
-              _context12.next = 4;
-              return _this.rpcHttpService.postRequest(data);
-
-            case 4:
-              response = _context12.sent;
-              _context12.next = 10;
-              break;
-
-            case 7:
-              _context12.prev = 7;
-              _context12.t0 = _context12["catch"](1);
-              throw _context12.t0;
-
-            case 10:
-              if (!(response.status !== 200)) {
-                _context12.next = 14;
-                break;
-              }
-
-              throw new Error("Can't request API get transaction by hash");
-
-            case 14:
-              if (!(response.data.Result === null && response.data.Error)) {
-                _context12.next = 16;
-                break;
-              }
-
-              return _context12.abrupt("return", {
-                isInBlock: false,
-                isInMempool: false,
-                err: response.data.Error
-              });
-
-            case 16:
-              return _context12.abrupt("return", {
-                isInBlock: response.data.Result.IsInBlock,
-                isInMempool: response.data.Result.IsInMempool,
-                err: null
-              });
-
-            case 17:
-            case "end":
-              return _context12.stop();
-          }
-        }
-      }, _callee12, null, [[1, 7]]);
-    }));
-
-    return function (_x15) {
-      return _ref12.apply(this, arguments);
-    };
-  }());
-
-  _defineProperty(this, "getStakingAmount",
-  /*#__PURE__*/
-  function () {
     var _ref13 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee13(type) {
+    regeneratorRuntime.mark(function _callee13(txHashStr) {
       var data, response;
       return regeneratorRuntime.wrap(function _callee13$(_context13) {
         while (1) {
           switch (_context13.prev = _context13.next) {
             case 0:
               data = {
-                "jsonrpc": "1.0",
-                "method": "getstackingamount",
-                "params": [type],
+                "method": "gettransactionbyhash",
+                "params": [txHashStr],
                 "id": 1
               };
               _context13.prev = 1;
@@ -5555,7 +5551,7 @@ var RpcClient = function RpcClient(url, user, password) {
             case 7:
               _context13.prev = 7;
               _context13.t0 = _context13["catch"](1);
-              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetStakingAmountErr, "Can't request API get staking amount");
+              throw _context13.t0;
 
             case 10:
               if (!(response.status !== 200)) {
@@ -5563,19 +5559,25 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetStakingAmountErr, "Can't request API get staking amount");
+              throw new Error("Can't request API get transaction by hash");
 
             case 14:
-              if (!response.data.Error) {
+              if (!(response.data.Result === null && response.data.Error)) {
                 _context13.next = 16;
                 break;
               }
 
-              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetStakingAmountErr, response.data.Error.Message || "Can't request API get staking amount");
+              return _context13.abrupt("return", {
+                isInBlock: false,
+                isInMempool: false,
+                err: response.data.Error
+              });
 
             case 16:
               return _context13.abrupt("return", {
-                res: Number(response.data.Result)
+                isInBlock: response.data.Result.IsInBlock,
+                isInMempool: response.data.Result.IsInMempool,
+                err: null
               });
 
             case 17:
@@ -5586,71 +5588,77 @@ var RpcClient = function RpcClient(url, user, password) {
       }, _callee13, null, [[1, 7]]);
     }));
 
-    return function (_x16) {
+    return function (_x17) {
       return _ref13.apply(this, arguments);
     };
   }());
 
-  _defineProperty(this, "getActiveShard",
+  _defineProperty(this, "getStakingAmount",
   /*#__PURE__*/
-  _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee14() {
-    var data, response;
-    return regeneratorRuntime.wrap(function _callee14$(_context14) {
-      while (1) {
-        switch (_context14.prev = _context14.next) {
-          case 0:
-            data = {
-              "jsonrpc": "1.0",
-              "method": "getactiveshards",
-              "params": [],
-              "id": 1
-            };
-            _context14.prev = 1;
-            _context14.next = 4;
-            return _this.rpcHttpService.postRequest(data);
+  function () {
+    var _ref14 = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee14(type) {
+      var data, response;
+      return regeneratorRuntime.wrap(function _callee14$(_context14) {
+        while (1) {
+          switch (_context14.prev = _context14.next) {
+            case 0:
+              data = {
+                "jsonrpc": "1.0",
+                "method": "getstackingamount",
+                "params": [type],
+                "id": 1
+              };
+              _context14.prev = 1;
+              _context14.next = 4;
+              return _this.rpcHttpService.postRequest(data);
 
-          case 4:
-            response = _context14.sent;
-            _context14.next = 10;
-            break;
-
-          case 7:
-            _context14.prev = 7;
-            _context14.t0 = _context14["catch"](1);
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetActiveShardErr, "Can't request API get active shard nunber");
-
-          case 10:
-            if (!(response.status !== 200)) {
-              _context14.next = 14;
+            case 4:
+              response = _context14.sent;
+              _context14.next = 10;
               break;
-            }
 
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetActiveShardErr, "Can't request API get active shard nunber");
+            case 7:
+              _context14.prev = 7;
+              _context14.t0 = _context14["catch"](1);
+              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetStakingAmountErr, "Can't request API get staking amount");
 
-          case 14:
-            if (!response.data.Error) {
-              _context14.next = 16;
-              break;
-            }
+            case 10:
+              if (!(response.status !== 200)) {
+                _context14.next = 14;
+                break;
+              }
 
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetActiveShardErr, response.data.Error.Message || "Can't request API get active shard nunber");
+              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetStakingAmountErr, "Can't request API get staking amount");
 
-          case 16:
-            return _context14.abrupt("return", {
-              shardNumber: parseInt(response.data.Result)
-            });
+            case 14:
+              if (!response.data.Error) {
+                _context14.next = 16;
+                break;
+              }
 
-          case 17:
-          case "end":
-            return _context14.stop();
+              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetStakingAmountErr, response.data.Error.Message || "Can't request API get staking amount");
+
+            case 16:
+              return _context14.abrupt("return", {
+                res: Number(response.data.Result)
+              });
+
+            case 17:
+            case "end":
+              return _context14.stop();
+          }
         }
-      }
-    }, _callee14, null, [[1, 7]]);
-  })));
+      }, _callee14, null, [[1, 7]]);
+    }));
 
-  _defineProperty(this, "getMaxShardNumber",
+    return function (_x18) {
+      return _ref14.apply(this, arguments);
+    };
+  }());
+
+  _defineProperty(this, "getActiveShard",
   /*#__PURE__*/
   _asyncToGenerator(
   /*#__PURE__*/
@@ -5662,7 +5670,7 @@ var RpcClient = function RpcClient(url, user, password) {
           case 0:
             data = {
               "jsonrpc": "1.0",
-              "method": "getmaxshardsnumber",
+              "method": "getactiveshards",
               "params": [],
               "id": 1
             };
@@ -5678,7 +5686,7 @@ var RpcClient = function RpcClient(url, user, password) {
           case 7:
             _context15.prev = 7;
             _context15.t0 = _context15["catch"](1);
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetMaxShardNumberErr, "Can't request API get max shard number");
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetActiveShardErr, "Can't request API get active shard nunber");
 
           case 10:
             if (!(response.status !== 200)) {
@@ -5686,7 +5694,7 @@ var RpcClient = function RpcClient(url, user, password) {
               break;
             }
 
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetMaxShardNumberErr, "Can't request API get max shard number");
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetActiveShardErr, "Can't request API get active shard nunber");
 
           case 14:
             if (!response.data.Error) {
@@ -5694,7 +5702,7 @@ var RpcClient = function RpcClient(url, user, password) {
               break;
             }
 
-            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetMaxShardNumberErr, response.data.Error.Message);
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetActiveShardErr, response.data.Error.Message || "Can't request API get active shard nunber");
 
           case 16:
             return _context15.abrupt("return", {
@@ -5709,77 +5717,71 @@ var RpcClient = function RpcClient(url, user, password) {
     }, _callee15, null, [[1, 7]]);
   })));
 
-  _defineProperty(this, "hashToIdenticon",
+  _defineProperty(this, "getMaxShardNumber",
   /*#__PURE__*/
-  function () {
-    var _ref16 = _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee16(hashStrs) {
-      var data, response;
-      return regeneratorRuntime.wrap(function _callee16$(_context16) {
-        while (1) {
-          switch (_context16.prev = _context16.next) {
-            case 0:
-              data = {
-                "jsonrpc": "1.0",
-                "method": "hashtoidenticon",
-                "params": hashStrs,
-                "id": 1
-              };
-              _context16.prev = 1;
-              _context16.next = 4;
-              return _this.rpcHttpService.postRequest(data);
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee16() {
+    var data, response;
+    return regeneratorRuntime.wrap(function _callee16$(_context16) {
+      while (1) {
+        switch (_context16.prev = _context16.next) {
+          case 0:
+            data = {
+              "jsonrpc": "1.0",
+              "method": "getmaxshardsnumber",
+              "params": [],
+              "id": 1
+            };
+            _context16.prev = 1;
+            _context16.next = 4;
+            return _this.rpcHttpService.postRequest(data);
 
-            case 4:
-              response = _context16.sent;
-              _context16.next = 10;
+          case 4:
+            response = _context16.sent;
+            _context16.next = 10;
+            break;
+
+          case 7:
+            _context16.prev = 7;
+            _context16.t0 = _context16["catch"](1);
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetMaxShardNumberErr, "Can't request API get max shard number");
+
+          case 10:
+            if (!(response.status !== 200)) {
+              _context16.next = 14;
               break;
+            }
 
-            case 7:
-              _context16.prev = 7;
-              _context16.t0 = _context16["catch"](1);
-              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].HashToIdenticonErr, "Can't request API get image from hash string");
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetMaxShardNumberErr, "Can't request API get max shard number");
 
-            case 10:
-              if (!(response.status !== 200)) {
-                _context16.next = 14;
-                break;
-              }
+          case 14:
+            if (!response.data.Error) {
+              _context16.next = 16;
+              break;
+            }
 
-              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].HashToIdenticonErr, "Can't request API get image from hash string");
+            throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].GetMaxShardNumberErr, response.data.Error.Message);
 
-            case 14:
-              if (!response.data.Error) {
-                _context16.next = 16;
-                break;
-              }
+          case 16:
+            return _context16.abrupt("return", {
+              shardNumber: parseInt(response.data.Result)
+            });
 
-              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].HashToIdenticonErr, response.data.Error.Message);
-
-            case 16:
-              return _context16.abrupt("return", {
-                images: response.data.Result
-              });
-
-            case 17:
-            case "end":
-              return _context16.stop();
-          }
+          case 17:
+          case "end":
+            return _context16.stop();
         }
-      }, _callee16, null, [[1, 7]]);
-    }));
+      }
+    }, _callee16, null, [[1, 7]]);
+  })));
 
-    return function (_x17) {
-      return _ref16.apply(this, arguments);
-    };
-  }());
-
-  _defineProperty(this, "getRewardAmount",
+  _defineProperty(this, "hashToIdenticon",
   /*#__PURE__*/
   function () {
     var _ref17 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee17(paymentAddrStr) {
+    regeneratorRuntime.mark(function _callee17(hashStrs) {
       var data, response;
       return regeneratorRuntime.wrap(function _callee17$(_context17) {
         while (1) {
@@ -5787,8 +5789,8 @@ var RpcClient = function RpcClient(url, user, password) {
             case 0:
               data = {
                 "jsonrpc": "1.0",
-                "method": "getrewardamount",
-                "params": [paymentAddrStr],
+                "method": "hashtoidenticon",
+                "params": hashStrs,
                 "id": 1
               };
               _context17.prev = 1;
@@ -5803,7 +5805,7 @@ var RpcClient = function RpcClient(url, user, password) {
             case 7:
               _context17.prev = 7;
               _context17.t0 = _context17["catch"](1);
-              throw _context17.t0;
+              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].HashToIdenticonErr, "Can't request API get image from hash string");
 
             case 10:
               if (!(response.status !== 200)) {
@@ -5811,7 +5813,7 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw new Error("Can't request API get image from hash string");
+              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].HashToIdenticonErr, "Can't request API get image from hash string");
 
             case 14:
               if (!response.data.Error) {
@@ -5819,11 +5821,11 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw response.data.Error;
+              throw new _errorhandler__WEBPACK_IMPORTED_MODULE_4__["CustomError"](_errorhandler__WEBPACK_IMPORTED_MODULE_4__["ErrorObject"].HashToIdenticonErr, response.data.Error.Message);
 
             case 16:
               return _context17.abrupt("return", {
-                rewards: response.data.Result
+                images: response.data.Result
               });
 
             case 17:
@@ -5834,8 +5836,73 @@ var RpcClient = function RpcClient(url, user, password) {
       }, _callee17, null, [[1, 7]]);
     }));
 
-    return function (_x18) {
+    return function (_x19) {
       return _ref17.apply(this, arguments);
+    };
+  }());
+
+  _defineProperty(this, "getRewardAmount",
+  /*#__PURE__*/
+  function () {
+    var _ref18 = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee18(paymentAddrStr) {
+      var data, response;
+      return regeneratorRuntime.wrap(function _callee18$(_context18) {
+        while (1) {
+          switch (_context18.prev = _context18.next) {
+            case 0:
+              data = {
+                "jsonrpc": "1.0",
+                "method": "getrewardamount",
+                "params": [paymentAddrStr],
+                "id": 1
+              };
+              _context18.prev = 1;
+              _context18.next = 4;
+              return _this.rpcHttpService.postRequest(data);
+
+            case 4:
+              response = _context18.sent;
+              _context18.next = 10;
+              break;
+
+            case 7:
+              _context18.prev = 7;
+              _context18.t0 = _context18["catch"](1);
+              throw _context18.t0;
+
+            case 10:
+              if (!(response.status !== 200)) {
+                _context18.next = 14;
+                break;
+              }
+
+              throw new Error("Can't request API get image from hash string");
+
+            case 14:
+              if (!response.data.Error) {
+                _context18.next = 16;
+                break;
+              }
+
+              throw response.data.Error;
+
+            case 16:
+              return _context18.abrupt("return", {
+                rewards: response.data.Result
+              });
+
+            case 17:
+            case "end":
+              return _context18.stop();
+          }
+        }
+      }, _callee18, null, [[1, 7]]);
+    }));
+
+    return function (_x20) {
+      return _ref18.apply(this, arguments);
     };
   }());
 
@@ -5843,11 +5910,11 @@ var RpcClient = function RpcClient(url, user, password) {
   /*#__PURE__*/
   _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee18() {
+  regeneratorRuntime.mark(function _callee19() {
     var data, response;
-    return regeneratorRuntime.wrap(function _callee18$(_context18) {
+    return regeneratorRuntime.wrap(function _callee19$(_context19) {
       while (1) {
-        switch (_context18.prev = _context18.next) {
+        switch (_context19.prev = _context19.next) {
           case 0:
             data = {
               "jsonrpc": "1.0",
@@ -5855,23 +5922,23 @@ var RpcClient = function RpcClient(url, user, password) {
               "params": [],
               "id": 1
             };
-            _context18.prev = 1;
-            _context18.next = 4;
+            _context19.prev = 1;
+            _context19.next = 4;
             return _this.rpcHttpService.postRequest(data);
 
           case 4:
-            response = _context18.sent;
-            _context18.next = 10;
+            response = _context19.sent;
+            _context19.next = 10;
             break;
 
           case 7:
-            _context18.prev = 7;
-            _context18.t0 = _context18["catch"](1);
-            throw _context18.t0;
+            _context19.prev = 7;
+            _context19.t0 = _context19["catch"](1);
+            throw _context19.t0;
 
           case 10:
             if (!(response.status !== 200)) {
-              _context18.next = 14;
+              _context19.next = 14;
               break;
             }
 
@@ -5879,96 +5946,31 @@ var RpcClient = function RpcClient(url, user, password) {
 
           case 14:
             if (!response.data.Error) {
-              _context18.next = 16;
+              _context19.next = 16;
               break;
             }
 
             throw response.data.Error;
 
           case 16:
-            return _context18.abrupt("return", {
+            return _context19.abrupt("return", {
               bestState: response.data.Result
             });
 
           case 17:
           case "end":
-            return _context18.stop();
+            return _context19.stop();
         }
       }
-    }, _callee18, null, [[1, 7]]);
+    }, _callee19, null, [[1, 7]]);
   })));
 
   _defineProperty(this, "getPublicKeyRole",
   /*#__PURE__*/
   function () {
-    var _ref19 = _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee19(publicKey) {
-      var data, response;
-      return regeneratorRuntime.wrap(function _callee19$(_context19) {
-        while (1) {
-          switch (_context19.prev = _context19.next) {
-            case 0:
-              data = {
-                "jsonrpc": "1.0",
-                "method": "getpublickeyrole",
-                "params": [publicKey],
-                "id": 1
-              };
-              _context19.prev = 1;
-              _context19.next = 4;
-              return _this.rpcHttpService.postRequest(data);
-
-            case 4:
-              response = _context19.sent;
-              _context19.next = 10;
-              break;
-
-            case 7:
-              _context19.prev = 7;
-              _context19.t0 = _context19["catch"](1);
-              throw _context19.t0;
-
-            case 10:
-              if (!(response.status !== 200)) {
-                _context19.next = 14;
-                break;
-              }
-
-              throw new Error("Can't request API get public key role");
-
-            case 14:
-              if (!response.data.Error) {
-                _context19.next = 16;
-                break;
-              }
-
-              throw response.data.Error;
-
-            case 16:
-              return _context19.abrupt("return", {
-                status: response.data.Result
-              });
-
-            case 17:
-            case "end":
-              return _context19.stop();
-          }
-        }
-      }, _callee19, null, [[1, 7]]);
-    }));
-
-    return function (_x19) {
-      return _ref19.apply(this, arguments);
-    };
-  }());
-
-  _defineProperty(this, "getPDEState",
-  /*#__PURE__*/
-  function () {
     var _ref20 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee20(beaconHeight) {
+    regeneratorRuntime.mark(function _callee20(publicKey) {
       var data, response;
       return regeneratorRuntime.wrap(function _callee20$(_context20) {
         while (1) {
@@ -5976,10 +5978,8 @@ var RpcClient = function RpcClient(url, user, password) {
             case 0:
               data = {
                 "jsonrpc": "1.0",
-                "method": "getpdestate",
-                "params": [{
-                  "BeaconHeight": beaconHeight
-                }],
+                "method": "getpublickeyrole",
+                "params": [publicKey],
                 "id": 1
               };
               _context20.prev = 1;
@@ -6002,7 +6002,7 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw new Error("Can't request API get PDE state");
+              throw new Error("Can't request API get public key role");
 
             case 14:
               if (!response.data.Error) {
@@ -6014,7 +6014,7 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 16:
               return _context20.abrupt("return", {
-                state: response.data.Result
+                status: response.data.Result
               });
 
             case 17:
@@ -6025,29 +6025,29 @@ var RpcClient = function RpcClient(url, user, password) {
       }, _callee20, null, [[1, 7]]);
     }));
 
-    return function (_x20) {
+    return function (_x21) {
       return _ref20.apply(this, arguments);
     };
   }());
 
-  _defineProperty(this, "getPDETradeStatus",
+  _defineProperty(this, "getPDEState",
   /*#__PURE__*/
   function () {
     var _ref21 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee21(txId) {
+    regeneratorRuntime.mark(function _callee21(beaconHeight) {
       var data, response;
       return regeneratorRuntime.wrap(function _callee21$(_context21) {
         while (1) {
           switch (_context21.prev = _context21.next) {
             case 0:
               data = {
-                "id": 1,
                 "jsonrpc": "1.0",
-                "method": "getpdetradestatus",
+                "method": "getpdestate",
                 "params": [{
-                  "TxRequestIDStr": txId
-                }]
+                  "BeaconHeight": beaconHeight
+                }],
+                "id": 1
               };
               _context21.prev = 1;
               _context21.next = 4;
@@ -6092,17 +6092,17 @@ var RpcClient = function RpcClient(url, user, password) {
       }, _callee21, null, [[1, 7]]);
     }));
 
-    return function (_x21) {
+    return function (_x22) {
       return _ref21.apply(this, arguments);
     };
   }());
 
-  _defineProperty(this, "getPDEContributionStatus",
+  _defineProperty(this, "getPDETradeStatus",
   /*#__PURE__*/
   function () {
     var _ref22 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee22(pairId) {
+    regeneratorRuntime.mark(function _callee22(txId) {
       var data, response;
       return regeneratorRuntime.wrap(function _callee22$(_context22) {
         while (1) {
@@ -6111,9 +6111,9 @@ var RpcClient = function RpcClient(url, user, password) {
               data = {
                 "id": 1,
                 "jsonrpc": "1.0",
-                "method": "getpdecontributionstatus",
+                "method": "getpdetradestatus",
                 "params": [{
-                  "ContributionPairID": pairId
+                  "TxRequestIDStr": txId
                 }]
               };
               _context22.prev = 1;
@@ -6136,7 +6136,7 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw new Error("Can't request API getPDEContributionStatus");
+              throw new Error("Can't request API get PDE state");
 
             case 14:
               if (!response.data.Error) {
@@ -6159,17 +6159,17 @@ var RpcClient = function RpcClient(url, user, password) {
       }, _callee22, null, [[1, 7]]);
     }));
 
-    return function (_x22) {
+    return function (_x23) {
       return _ref22.apply(this, arguments);
     };
   }());
 
-  _defineProperty(this, "getPDEWithdrawalStatus",
+  _defineProperty(this, "getPDEContributionStatus",
   /*#__PURE__*/
   function () {
     var _ref23 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee23(txId) {
+    regeneratorRuntime.mark(function _callee23(pairId) {
       var data, response;
       return regeneratorRuntime.wrap(function _callee23$(_context23) {
         while (1) {
@@ -6178,9 +6178,9 @@ var RpcClient = function RpcClient(url, user, password) {
               data = {
                 "id": 1,
                 "jsonrpc": "1.0",
-                "method": "getpdewithdrawalstatus",
+                "method": "getpdecontributionstatus",
                 "params": [{
-                  "TxRequestIDStr": txId
+                  "ContributionPairID": pairId
                 }]
               };
               _context23.prev = 1;
@@ -6203,7 +6203,7 @@ var RpcClient = function RpcClient(url, user, password) {
                 break;
               }
 
-              throw new Error("Can't request API getPDEWithdrawalStatus");
+              throw new Error("Can't request API getPDEContributionStatus");
 
             case 14:
               if (!response.data.Error) {
@@ -6226,123 +6226,213 @@ var RpcClient = function RpcClient(url, user, password) {
       }, _callee23, null, [[1, 7]]);
     }));
 
-    return function (_x23) {
+    return function (_x24) {
       return _ref23.apply(this, arguments);
     };
   }());
+
+  _defineProperty(this, "getPDEWithdrawalStatus",
+  /*#__PURE__*/
+  function () {
+    var _ref24 = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee24(txId) {
+      var data, response;
+      return regeneratorRuntime.wrap(function _callee24$(_context24) {
+        while (1) {
+          switch (_context24.prev = _context24.next) {
+            case 0:
+              data = {
+                "id": 1,
+                "jsonrpc": "1.0",
+                "method": "getpdewithdrawalstatus",
+                "params": [{
+                  "TxRequestIDStr": txId
+                }]
+              };
+              _context24.prev = 1;
+              _context24.next = 4;
+              return _this.rpcHttpService.postRequest(data);
+
+            case 4:
+              response = _context24.sent;
+              _context24.next = 10;
+              break;
+
+            case 7:
+              _context24.prev = 7;
+              _context24.t0 = _context24["catch"](1);
+              throw _context24.t0;
+
+            case 10:
+              if (!(response.status !== 200)) {
+                _context24.next = 14;
+                break;
+              }
+
+              throw new Error("Can't request API getPDEWithdrawalStatus");
+
+            case 14:
+              if (!response.data.Error) {
+                _context24.next = 16;
+                break;
+              }
+
+              throw response.data.Error;
+
+            case 16:
+              return _context24.abrupt("return", {
+                state: response.data.Result
+              });
+
+            case 17:
+            case "end":
+              return _context24.stop();
+          }
+        }
+      }, _callee24, null, [[1, 7]]);
+    }));
+
+    return function (_x25) {
+      return _ref24.apply(this, arguments);
+    };
+  }());
+
+  _defineProperty(this, "getBlockChainInfo",
+  /*#__PURE__*/
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee25() {
+    return regeneratorRuntime.wrap(function _callee25$(_context25) {
+      while (1) {
+        switch (_context25.prev = _context25.next) {
+          case 0:
+            return _context25.abrupt("return", parseResponse(_this.rpcHttpService, 'getblockchaininfo'));
+
+          case 1:
+          case "end":
+            return _context25.stop();
+        }
+      }
+    }, _callee25);
+  })));
+
+  _defineProperty(this, "listRewardAmount",
+  /*#__PURE__*/
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee26() {
+    return regeneratorRuntime.wrap(function _callee26$(_context26) {
+      while (1) {
+        switch (_context26.prev = _context26.next) {
+          case 0:
+            return _context26.abrupt("return", parseResponse(_this.rpcHttpService, 'listrewardamount'));
+
+          case 1:
+          case "end":
+            return _context26.stop();
+        }
+      }
+    }, _callee26);
+  })));
+
+  _defineProperty(this, "getBeaconBestStateDetail",
+  /*#__PURE__*/
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee27() {
+    return regeneratorRuntime.wrap(function _callee27$(_context27) {
+      while (1) {
+        switch (_context27.prev = _context27.next) {
+          case 0:
+            return _context27.abrupt("return", parseResponse(_this.rpcHttpService, 'getbeaconbeststatedetail'));
+
+          case 1:
+          case "end":
+            return _context27.stop();
+        }
+      }
+    }, _callee27);
+  })));
 
   _defineProperty(this, "getBeaconHeight",
   /*#__PURE__*/
   _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee24() {
-    var data, response;
-    return regeneratorRuntime.wrap(function _callee24$(_context24) {
+  regeneratorRuntime.mark(function _callee28() {
+    var data;
+    return regeneratorRuntime.wrap(function _callee28$(_context28) {
       while (1) {
-        switch (_context24.prev = _context24.next) {
+        switch (_context28.prev = _context28.next) {
           case 0:
-            data = {
-              "jsonrpc": "1.0",
-              "method": "getbeaconbeststate",
-              "params": [],
-              "id": 1
-            };
-            _context24.prev = 1;
-            _context24.next = 4;
-            return _this.rpcHttpService.postRequest(data);
+            _context28.next = 2;
+            return _this.getBlockChainInfo();
+
+          case 2:
+            data = _context28.sent;
+            return _context28.abrupt("return", data.BestBlocks['-1'].Height);
 
           case 4:
-            response = _context24.sent;
-            _context24.next = 10;
-            break;
-
-          case 7:
-            _context24.prev = 7;
-            _context24.t0 = _context24["catch"](1);
-            throw _context24.t0;
-
-          case 10:
-            if (!(response.status !== 200)) {
-              _context24.next = 14;
-              break;
-            }
-
-            throw new Error("Can't request API get beacon best state");
-
-          case 14:
-            if (!response.data.Error) {
-              _context24.next = 16;
-              break;
-            }
-
-            throw response.data.Error;
-
-          case 16:
-            return _context24.abrupt("return", {
-              beaconHeight: response.data.Result.BeaconHeight
-            });
-
-          case 17:
           case "end":
-            return _context24.stop();
+            return _context28.stop();
         }
       }
-    }, _callee24, null, [[1, 7]]);
+    }, _callee28);
   })));
 
   _defineProperty(this, "isExchangeRatePToken",
   /*#__PURE__*/
   function () {
-    var _ref25 = _asyncToGenerator(
+    var _ref29 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee25(tokenIDStr1) {
+    regeneratorRuntime.mark(function _callee29(tokenIDStr1) {
       var tokenIDStr2,
           beaconHeight,
           res,
           pdeStateRes,
           tokenIDArray,
           keyValue,
-          _args25 = arguments;
-      return regeneratorRuntime.wrap(function _callee25$(_context25) {
+          _args29 = arguments;
+      return regeneratorRuntime.wrap(function _callee29$(_context29) {
         while (1) {
-          switch (_context25.prev = _context25.next) {
+          switch (_context29.prev = _context29.next) {
             case 0:
-              tokenIDStr2 = _args25.length > 1 && _args25[1] !== undefined ? _args25[1] : "";
+              tokenIDStr2 = _args29.length > 1 && _args29[1] !== undefined ? _args29[1] : "";
 
               if (tokenIDStr2 === "") {
                 tokenIDStr2 = _wallet_constants__WEBPACK_IMPORTED_MODULE_5__["PRVIDSTR"];
               } // get latest beacon height
 
 
-              _context25.prev = 2;
-              _context25.next = 5;
+              _context29.prev = 2;
+              _context29.next = 5;
               return _this.getBeaconHeight();
 
             case 5:
-              res = _context25.sent;
+              res = _context29.sent;
               beaconHeight = res.beaconHeight;
-              _context25.next = 12;
+              _context29.next = 12;
               break;
 
             case 9:
-              _context25.prev = 9;
-              _context25.t0 = _context25["catch"](2);
-              throw _context25.t0;
+              _context29.prev = 9;
+              _context29.t0 = _context29["catch"](2);
+              throw _context29.t0;
 
             case 12:
-              _context25.prev = 12;
-              _context25.next = 15;
+              _context29.prev = 12;
+              _context29.next = 15;
               return _this.getPDEState(beaconHeight);
 
             case 15:
-              pdeStateRes = _context25.sent;
-              _context25.next = 21;
+              pdeStateRes = _context29.sent;
+              _context29.next = 21;
               break;
 
             case 18:
-              _context25.prev = 18;
-              _context25.t1 = _context25["catch"](12);
-              throw _context25.t1;
+              _context29.prev = 18;
+              _context29.t1 = _context29["catch"](12);
+              throw _context29.t1;
 
             case 21:
               console.log("pdeStateRes: ", pdeStateRes);
@@ -6352,54 +6442,54 @@ var RpcClient = function RpcClient(url, user, password) {
               console.log("pdeStateRes.state.PDEPoolPairs[keyValue]: ", pdeStateRes.state.PDEPoolPairs[keyValue]);
 
               if (!(pdeStateRes.state.PDEPoolPairs[keyValue] !== null && pdeStateRes.state.PDEPoolPairs[keyValue] !== undefined)) {
-                _context25.next = 32;
+                _context29.next = 32;
                 break;
               }
 
               if (!(tokenIDArray[0] == _wallet_constants__WEBPACK_IMPORTED_MODULE_5__["PRVIDSTR"] && pdeStateRes.state.PDEPoolPairs[keyValue].Token1PoolValue < 10000 * 1e9)) {
-                _context25.next = 29;
+                _context29.next = 29;
                 break;
               }
 
-              return _context25.abrupt("return", false);
+              return _context29.abrupt("return", false);
 
             case 29:
               if (!(tokenIDArray[1] == _wallet_constants__WEBPACK_IMPORTED_MODULE_5__["PRVIDSTR"] && pdeStateRes.state.PDEPoolPairs[keyValue].Token2PoolValue < 10000 * 1e9)) {
-                _context25.next = 31;
+                _context29.next = 31;
                 break;
               }
 
-              return _context25.abrupt("return", false);
+              return _context29.abrupt("return", false);
 
             case 31:
-              return _context25.abrupt("return", true);
+              return _context29.abrupt("return", true);
 
             case 32:
-              return _context25.abrupt("return", false);
+              return _context29.abrupt("return", false);
 
             case 33:
             case "end":
-              return _context25.stop();
+              return _context29.stop();
           }
         }
-      }, _callee25, null, [[2, 9], [12, 18]]);
+      }, _callee29, null, [[2, 9], [12, 18]]);
     }));
 
-    return function (_x24) {
-      return _ref25.apply(this, arguments);
+    return function (_x26) {
+      return _ref29.apply(this, arguments);
     };
   }());
 
   _defineProperty(this, "getTransactionByReceiver",
   /*#__PURE__*/
   function () {
-    var _ref26 = _asyncToGenerator(
+    var _ref30 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee26(paymentAdrr, viewingKey) {
+    regeneratorRuntime.mark(function _callee30(paymentAdrr, viewingKey) {
       var data, response, result;
-      return regeneratorRuntime.wrap(function _callee26$(_context26) {
+      return regeneratorRuntime.wrap(function _callee30$(_context30) {
         while (1) {
-          switch (_context26.prev = _context26.next) {
+          switch (_context30.prev = _context30.next) {
             case 0:
               data = {
                 "jsonrpc": "1.0",
@@ -6410,23 +6500,23 @@ var RpcClient = function RpcClient(url, user, password) {
                 }],
                 "id": 1
               };
-              _context26.prev = 1;
-              _context26.next = 4;
+              _context30.prev = 1;
+              _context30.next = 4;
               return _this.rpcHttpService.postRequest(data);
 
             case 4:
-              response = _context26.sent;
-              _context26.next = 10;
+              response = _context30.sent;
+              _context30.next = 10;
               break;
 
             case 7:
-              _context26.prev = 7;
-              _context26.t0 = _context26["catch"](1);
-              throw _context26.t0;
+              _context30.prev = 7;
+              _context30.t0 = _context30["catch"](1);
+              throw _context30.t0;
 
             case 10:
               if (!(response.status !== 200)) {
-                _context26.next = 14;
+                _context30.next = 14;
                 break;
               }
 
@@ -6434,7 +6524,7 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 14:
               if (!response.data.Error) {
-                _context26.next = 16;
+                _context30.next = 16;
                 break;
               }
 
@@ -6442,33 +6532,33 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 16:
               result = response.data.Result;
-              return _context26.abrupt("return", {
+              return _context30.abrupt("return", {
                 receivedTransactions: result.ReceivedTransactions
               });
 
             case 18:
             case "end":
-              return _context26.stop();
+              return _context30.stop();
           }
         }
-      }, _callee26, null, [[1, 7]]);
+      }, _callee30, null, [[1, 7]]);
     }));
 
-    return function (_x25, _x26) {
-      return _ref26.apply(this, arguments);
+    return function (_x27, _x28) {
+      return _ref30.apply(this, arguments);
     };
   }());
 
   _defineProperty(this, "getListPrivacyCustomTokenBalance",
   /*#__PURE__*/
   function () {
-    var _ref27 = _asyncToGenerator(
+    var _ref31 = _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee27(privateKey) {
+    regeneratorRuntime.mark(function _callee31(privateKey) {
       var data, response;
-      return regeneratorRuntime.wrap(function _callee27$(_context27) {
+      return regeneratorRuntime.wrap(function _callee31$(_context31) {
         while (1) {
-          switch (_context27.prev = _context27.next) {
+          switch (_context31.prev = _context31.next) {
             case 0:
               data = {
                 "jsonrpc": "1.0",
@@ -6476,23 +6566,23 @@ var RpcClient = function RpcClient(url, user, password) {
                 "params": [privateKey],
                 "id": 1
               };
-              _context27.prev = 1;
-              _context27.next = 4;
+              _context31.prev = 1;
+              _context31.next = 4;
               return _this.rpcHttpService.postRequest(data);
 
             case 4:
-              response = _context27.sent;
-              _context27.next = 10;
+              response = _context31.sent;
+              _context31.next = 10;
               break;
 
             case 7:
-              _context27.prev = 7;
-              _context27.t0 = _context27["catch"](1);
-              throw _context27.t0;
+              _context31.prev = 7;
+              _context31.t0 = _context31["catch"](1);
+              throw _context31.t0;
 
             case 10:
               if (!(response.status !== 200)) {
-                _context27.next = 14;
+                _context31.next = 14;
                 break;
               }
 
@@ -6500,25 +6590,25 @@ var RpcClient = function RpcClient(url, user, password) {
 
             case 14:
               if (!response.data.Error) {
-                _context27.next = 16;
+                _context31.next = 16;
                 break;
               }
 
               throw response.data.Error;
 
             case 16:
-              return _context27.abrupt("return", response.data.Result && response.data.Result.ListCustomTokenBalance || []);
+              return _context31.abrupt("return", response.data.Result && response.data.Result.ListCustomTokenBalance || []);
 
             case 17:
             case "end":
-              return _context27.stop();
+              return _context31.stop();
           }
         }
-      }, _callee27, null, [[1, 7]]);
+      }, _callee31, null, [[1, 7]]);
     }));
 
-    return function (_x27) {
-      return _ref27.apply(this, arguments);
+    return function (_x29) {
+      return _ref31.apply(this, arguments);
     };
   }());
 
